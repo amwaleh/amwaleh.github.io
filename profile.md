@@ -76,6 +76,6 @@ Outcome: Built team familiarity with AI and supported practical improvements in 
 - Full Stack Software Developer | Pluralsight | Sep 2017 - Sep 2018
   Partner engagement through Andela.
 - Software Developer-Consultant | Fixico | Jul 2018 - Dec 2018
-  Remote client engagement overlapping Andela.
+  Contract
 - Project Manager | Zist | Dec 2019 - Dec 2022
   Self-employed e-commerce project overlapping primary employment.
