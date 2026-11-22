@@ -98,6 +98,10 @@ def check_site(root):
     assert page.methods == 7, "All seven capability methods must remain collapsible."
     assert "Explore this career chapter" not in html and "28 career achievements" not in html
     assert "28 career achievements" not in (root / "Career-Journey-2016-2026.svg").read_text()
+    timeline = (root / "Career-Journey-2016-2026.svg").read_text()
+    assert "BUILDING TO LEADERSHIP" not in timeline
+    assert "PARTNER ENGAGEMENTS AND OTHER WORK" not in timeline
+    assert 'viewBox="0 0 1440 740"' in timeline and "career journey 2015-2026" in timeline
     assert page.proof_roles == ["microsoft", "pbp-director"], "Recent leadership precedes the full journey."
     assert page.primary_contact == "contact-popup"
     assert 'popover="auto" role="dialog"' in html
