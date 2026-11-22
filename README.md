@@ -6,9 +6,10 @@ A responsive static profile with no executable JavaScript, covering engineering 
 capabilities and career experience. Capability methods are collapsed on screen
 and readable in print. Company marks identify career organizations; they do not
 imply endorsement.
-The opening prioritizes leadership, a primary View CV action, LinkedIn and recent
+The opening prioritizes leadership, a primary Contact me action, LinkedIn and recent
 Microsoft/Powered by People examples. Compact floating navigation keeps 44px
 targets; the full chronological journey and technical background remain available.
+Contact me opens a native HTML popover containing the email address and a mail link.
 
 Search discovery includes a canonical URL, descriptive metadata, non-executing
 `ProfilePage`/`Person` JSON-LD, `robots.txt`, `sitemap.xml`, `llms.txt` and a public
@@ -33,4 +34,4 @@ python3 tools/check_site.py
 
 The exporter uses a fixed public-file allowlist. Do not commit original CVs,
 Connect reviews, interview PDFs, private profile JSON, source excerpts or credentials.
-The included PDF is the clean, public-facing master CV, not the evidence library.
+The master CV and evidence library remain private; neither is exported to this site.

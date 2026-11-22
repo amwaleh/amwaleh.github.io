@@ -10,12 +10,12 @@ import xml.etree.ElementTree as ET
 
 SITE_URL = "https://amwaleh.github.io/"
 LINKEDIN_URL = "https://www.linkedin.com/in/mwaleh/"
+CONTACT_EMAIL = "alexmuturi@gmail.com"
 
 
 PUBLIC_ASSETS = (
     "profile.md", "robots.txt", "sitemap.xml", "llms.txt",
     "Career-Journey-2016-2026.svg",
-    "Mwaleh-Muturi-Master-CV-2026-11-22.pdf",
     "assets/logos/andela.png",
     "assets/logos/pbp.png",
     "assets/logos/brck.png",
@@ -38,7 +38,7 @@ class Page(HTMLParser):
         self.metadata = {}
         self.canonical = None
         self.proof_roles = []
-        self.primary_cv = None
+        self.primary_contact = None
         self.secondary_linkedin = None
 
     def handle_starttag(self, tag, attrs):
@@ -60,8 +60,8 @@ class Page(HTMLParser):
             self.methods += 1
         if tag == "li" and attrs.get("class") == "leadership-proof":
             self.proof_roles.append(attrs.get("data-proof"))
-        if tag == "a" and attrs.get("class") == "primary-action":
-            self.primary_cv = attrs.get("href")
+        if tag == "button" and "primary-action" in attrs.get("class", "").split():
+            self.primary_contact = attrs.get("popovertarget")
         if tag == "a" and attrs.get("class") == "secondary-action":
             self.secondary_linkedin = attrs.get("href")
         if tag == "img":
@@ -97,7 +97,10 @@ def check_site(root):
     page.feed(html)
     assert page.methods == 7, "All seven capability methods must remain collapsible."
     assert page.proof_roles == ["microsoft", "pbp-director"], "Recent leadership precedes the full journey."
-    assert page.primary_cv == "Mwaleh-Muturi-Master-CV-2026-11-22.pdf"
+    assert page.primary_contact == "contact-popup"
+    assert 'popover="auto" role="dialog"' in html
+    assert "mailto:" + CONTACT_EMAIL in page.references
+    assert ".pdf" not in html and "View CV" not in html, "The public CV download has been removed."
     assert page.secondary_linkedin == LINKEDIN_URL
     assert {"career", "journey", "impact", "engagements"}.issubset(page.ids)
     assert page.canonical == SITE_URL
@@ -116,7 +119,8 @@ def check_site(root):
     for reference in page.references:
         url = urlsplit(reference)
         if url.scheme or url.netloc:
-            assert reference in {SITE_URL, LINKEDIN_URL, "https://github.com/amwaleh"}, reference
+            assert reference in {SITE_URL, LINKEDIN_URL, "https://github.com/amwaleh",
+                                 "mailto:" + CONTACT_EMAIL}, reference
             continue
         if url.path:
             asset = (root / unquote(url.path)).resolve()
