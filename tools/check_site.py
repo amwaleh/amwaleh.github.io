@@ -96,6 +96,8 @@ def check_site(root):
     page = Page()
     page.feed(html)
     assert page.methods == 7, "All seven capability methods must remain collapsible."
+    assert "Explore this career chapter" not in html and "28 career achievements" not in html
+    assert "28 career achievements" not in (root / "Career-Journey-2016-2026.svg").read_text()
     assert page.proof_roles == ["microsoft", "pbp-director"], "Recent leadership precedes the full journey."
     assert page.primary_contact == "contact-popup"
     assert 'popover="auto" role="dialog"' in html
