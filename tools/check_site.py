@@ -37,6 +37,9 @@ class Page(HTMLParser):
         self.schema_text = None
         self.metadata = {}
         self.canonical = None
+        self.proof_roles = []
+        self.primary_cv = None
+        self.secondary_linkedin = None
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -55,6 +58,12 @@ class Page(HTMLParser):
         if tag == "details" and attrs.get("class") == "capability-method":
             assert "open" not in attrs, "Methods must be collapsed by default."
             self.methods += 1
+        if tag == "li" and attrs.get("class") == "leadership-proof":
+            self.proof_roles.append(attrs.get("data-proof"))
+        if tag == "a" and attrs.get("class") == "primary-action":
+            self.primary_cv = attrs.get("href")
+        if tag == "a" and attrs.get("class") == "secondary-action":
+            self.secondary_linkedin = attrs.get("href")
         if tag == "img":
             assert "alt" in attrs, "Images need an alt attribute."
             assert attrs["alt"] or attrs.get("class") == "company-logo", (
@@ -79,13 +88,18 @@ def check_site(root):
     assert "Content-Security-Policy" in html
     assert not re.search(
         r"Connect[-s]|evidence_quote|additional_evidence|source-index|master-cv-data"
-        r"|career-journey-data|sharepoint\.com|outlook\.office\.com|/home/",
+        r"|career-journey-data|interview-evidence|Interview-Capabilities|private-sources"
+        r"|Interview_QA|Interview_Questions|sharepoint\.com|outlook\.office\.com|/home/",
         html,
         re.IGNORECASE,
     ), "Private source material is not a public presentation."
     page = Page()
     page.feed(html)
     assert page.methods == 7, "All seven capability methods must remain collapsible."
+    assert page.proof_roles == ["microsoft", "pbp-director"], "Recent leadership precedes the full journey."
+    assert page.primary_cv == "Mwaleh-Muturi-Master-CV-2026-11-22.pdf"
+    assert page.secondary_linkedin == LINKEDIN_URL
+    assert {"career", "journey", "impact", "engagements"}.issubset(page.ids)
     assert page.canonical == SITE_URL
     assert page.metadata.get("description")
     assert len(page.schemas) == 1
