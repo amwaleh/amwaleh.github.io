@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amwaleh.github.io/sitemap.xml
